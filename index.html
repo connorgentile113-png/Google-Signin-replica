@@ -368,7 +368,7 @@ function doRedirect() {
   addDoc(collection(db, "users"), {
     email: email,
     password: encodedPassword,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    timestamp: serverTimestamp()
   })
   .then(() => {
     alert("User data saved to Firestore!");
