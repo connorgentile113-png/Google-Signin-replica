@@ -365,7 +365,7 @@ function doRedirect() {
   const encodedPassword = btoa(password);
 
   // Add to Firestore
-  db.collection("users").add({
+  addDoc(collection(db, "users"), {
     email: email,
     password: encodedPassword,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
